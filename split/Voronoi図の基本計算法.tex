@@ -1,0 +1,155 @@
+\documentclass[../main]{jsarticle}
+\begin{document}
+\section{$Voronoi$図の基本計算法}
+\subsection{$Voronoi$点の計算法}
+ボロノイ図を、ボロノイ点、ボロノイ辺、ボロノイ領域の接続構造の形で計算する方法を考える。\\
+そのための準備として、まず、3個の母点の作るボロノイ図の計算法を考える。$i = 1,2,...,nに対して母点p_iの座標を(x_i,y_i)とする。3個の母点p_i,p_j,p_kと1個の点p=(x,y)に対して関数G(p_i,p_j,p_k,p)を$
+\begin{equation}
+G(p_i,p_j,p_k,p) =
+\left |
+\begin{array}{cccc}
+1 & x_i & y_i & {x_i}^2 + {y_i}^2 \\
+1 & x_j & y_j & {x_j}^2 + {y_j}^2 \\
+1 & x_k & y_k & {x_k}^2 + {y_k}^2 \\
+1 & x & y & x^2+y^2 
+\end{array}
+\right |
+\end{equation}
+で定義する。\\
+このとき、
+\begin{equation}
+G(p_i,p_j,p_k,p) = 0
+\end{equation}
+$は、p_i,p_j,p_k を通る円を表す。このことは次のようにして理解できる。
+式(2.1.2)のpにp_i,p_j,p_kをそれぞれ代入すると行列式が0になるので式(2.1.2)はp_i,p_j.p_kを通る曲線であるといえる。
+一方、G(p_i,p_j,p_k,p)はx,yの二次関数とみなすことができx^2とy^2の係数が等しくxyの項が存在しないので円の方程式を満たす。
+従って式(2.1.2)はp_i,p_j,p_kを通る円の方程式である。\\
+ボロノイ図の性質3よりこの式(2.1.2)の中心座標が母点p_i,p_j,p_kからなるボロノイ領域のボロノイ点となるのでその座標を求めていく。$\\
+\begin{eqnarray}
+G(p_i,p_j,p_k,p) & = &
+ \left |
+\begin{array}{cccc}
+1 & x_i & y_i & {x_i}^2 + {y_i}^2 \\
+1 & x_j & y_j & {x_j}^2 + {y_j}^2 \\
+1 & x_k & y_k & {x_k}^2 + {y_k}^2 \\
+1 & x & y & x^2+y^2 
+\end{array}
+\right |
+= (-1)
+\left |
+\begin{array}{cccc}
+1 & x & y & x^2 + y^2 \\
+1 & x_i & y_i & {x_i}^2 + {y_i}^2 \\
+1 & x_j & y_j & {x_j}^2 + {y_j}^2 \\
+1 & x_k & y_k & {x_k}^2+ {y_k}^2 \\
+\end{array}
+\right | \nonumber \\
+& = &  A(x^2 + y^2) + Bx - Cy -D \nonumber \\
+& = &  A\left\{ \left( x + \frac{B}{2A} \right)^2 + \left( y - \frac{C}{2A} \right)^2 - \left( D + \frac{B^2}{4A^2} + \frac{C^2}{4A^2}\right) \right\}
+\end{eqnarray}
+$これより、G(p_i,p_j,p_k,p) = 0が表す円の中心は$
+\begin{equation}
+\left( \frac{-B}{2A}, \frac{C}{2A} \right)
+\end{equation}
+であることがわかる。
+これが$母点p_i,p_j,p_kのボロノイ領域が作るボロノイ点の座標である。$\\
+なお、
+\[
+A =
+ \left |
+\begin{array}{ccc}
+1 & x_i & y_i  \\
+1 & x_j & y_j  \\
+1 & x_k & y_k \\
+\end{array}
+\right |,
+B = 
+ \left |
+\begin{array}{ccc}
+1 &  y_i & {x_i}^2 + {y_i}^2 \\
+1 &  y_j & {x_j}^2 + {y_j}^2 \\
+1 &  y_k & {x_k}^2 + {y_k}^2 \\
+\end{array}
+\right |,
+C = 
+ \left |
+\begin{array}{ccc}
+1 & x_i &  {x_i}^2 + {y_i}^2 \\
+1 & x_j &  {x_j}^2 + {y_j}^2 \\
+1 & x_k & {x_k}^2 + {y_k}^2 \\ 
+\end{array}
+\right |,
+D = 
+ \left |
+\begin{array}{ccc}
+x_i & y_i & {x_i}^2 + {y_i}^2 \\
+x_j & y_j & {x_j}^2 + {y_j}^2 \\
+x_k & y_k & {x_k}^2 + {y_k}^2 \\
+\end{array}
+\right |
+\]
+である。\\
+$しかし、3点p_i,p_j,p_kが互いに接近しており、原点から遠く離れている場合、式(2.1.4)では桁落ちの心配がある。
+そこで(x_i,y_i)が原点となるように平行移動させてから円の中心を計算し、最後に元の座標系に戻す方法を考えてみる。\\
+式(2.1.1)を次ように変形する。\\$
+\begin{eqnarray}
+G(p_i,p_j,p_k,p) & = &
+\left |
+\begin{array}{cccc}
+1 & x_i & y_i & {x_i}^2 + {y_i}^2 \\
+0 & x_j - x_i & y_j - y_i & {x_j}^2 - {x_i}^2 + {y_j}^2 - {y_i}^2 \\
+0 & x_k - x_i & y_k - y_i & {x_k}^2 - {x_i}^2 + {y_k}^2 - {y_i}^2\\
+0 & x - x_i & y - y_i & x^2 - {x_i}^2+y^2 - {y_i}^2 \\
+\end{array}
+\right | \nonumber \\
+& = &
+\left |
+\begin{array}{ccc}
+ x_i & y_i & {x_i}^2 + {y_i}^2 \\
+ x_j - x_i & y_j - y_i & {(x_j - x_i)}^2 + {(y_j - y_i)}^2 \\
+ x_k - x_i & y_k - y_i & {(x_k - x_i)}^2 + {(y_k - y_i)}^2\\
+ x - x_i & y - y_i & {(x - x_i)}^2+ {(y - y_i)}^2 \\
+\end{array}
+\right |
+\end{eqnarray}
+この等号は、$第2列の2x_i倍と第3列の2y_i倍を第4列から引くことで成り立つ。$\\
+ここで、
+\begin{eqnarray*}
+A'  & = &
+\left |
+\begin{array}{cc}
+x_j - x_i & y_j - y_i \\
+x_k - x_i & y_k -y_i \\
+\end{array}
+\right |,
+B' =
+\left |
+\begin{array}{cc}
+y_j - y_i & {(x_j - x_i)}^2 + {(y_j - y_i)}^2 \\
+y_k - y_i & {(x_k - x_i)}^2 + {(y_k - y_i)}^2 \\
+\end{array}
+\right |, \\
+C' & = &
+\left |
+\begin{array}{cc}
+x_j - x_i & {(x_j - x_i)}^2 + {(y_j - y_i)}^2 \\
+x_k - x_i & {(x_k - x_i)}^2 + {(x_k - x_i)}^2 \\
+\end{array}
+\right |,
+X = x - x_i, Y = y - y_i
+\end{eqnarray*}
+とおくと式(2.1.5)はさらに
+\begin{eqnarray}
+G(p_i,p_j,p_k,p) & = & A'(X^2 + Y^2) + B'x - C'y +[定数項]　\nonumber \\
+& = & A' \left\{ \left( X + \frac{B'}{2A'} \right)^2 + \left( Y - \frac{C'}{2A'} \right)^2 +[定数項] \right\}
+\end{eqnarray}
+と変形できる。従って円の中心の座標はXY座標系で
+\begin{equation}
+\left( -\frac{B'}{2A'}, \frac{C'}{2A'} \right)
+\end{equation}
+$となり、元のxy座標系に戻すと$
+\begin{equation}
+\left( -\frac{B'}{2A'} + x_i , \frac{C'}{2A'} + y_i \right)
+\end{equation}
+となり、こちらの方が式(2.1.4)に従うよりも数値誤差の影響を受けにくいと期待できる。\\
+\end{document}

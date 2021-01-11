@@ -1,0 +1,142 @@
+\documentclass[10pt,a4paper,titlepage]{jsarticle}
+\usepackage{graphicx}
+\usepackage[dvipdfmx]{color}
+\usepackage{enumerate}
+\usepackage{listings}
+\usepackage{subfiles}
+\makeatletter
+ \renewcommand{\theequation}{%
+   \thesubsection.\arabic{equation}}
+  \@addtoreset{equation}{subsection}
+\makeatother
+\title{$Voronoi$図の性質と構成法}
+\author{学籍番号:061601139\\
+	氏名 : 中川雅之\\
+	指導教員名:久保仁 准教授\\}
+\begin{document}
+\maketitle
+\begin{figure}[b]
+	\begin{center}
+		\includegraphics[height = 5cm]{voronoi.png}
+		\caption{ボロノイ図}
+	\end{center}
+\end{figure}
+
+\subfile{Voronoi図と基本的性質}
+
+\begin{enumerate}[性質1]
+	\item　ボロノイ領域は凸である。
+		\begin{itemize}
+		\item 式(1.1.1)で定義したように、ボロノイ領域は平面を直線で分けてできる半平面の共通部分であるので明らか。
+		\end{itemize}
+	\item　ボロノイ辺は両側の母点を結ぶ線分の垂直二等分線の上にある。
+		\begin{itemize}
+		\item ボロノイ図は、どの母点に最も近いかによって平面を分割したものであるから、ボロノイ辺は両側の母点から等しい距離にあるので明らか。
+		\end{itemize}
+	\item　ボロノイ点はその点を領域境界にもつ３つの母点を通る円の中心である。そして、この円の内部に他の母点は含まれない。
+		\begin{itemize}
+		\item ボロノイ点は周りから3つの母点から等しい距離にあり、ほかの母点はもっと遠くにあるから明らか。また、4つ以上のボロノイ領域の境界点となることもある。そのようなボロノイ点を{\bf 退化ボロノイ点}($degenerate~Voronoi~point$)と呼ぶとする。
+		\end{itemize}
+	\item 退化ボロノイ点$qを共通の境界点に持つ母点をp_1,p_2,,,p_k (k \geq 4)とする。このとき、p_1,p_2,,,p_kは同一円周上にある。$
+		\begin{itemize}
+		\item 性質３と同様にして明らか。
+		\end{itemize}
+\end{enumerate}
+
+\subfile{Voronoi図の複雑さ}
+
+\subfile{Voronoi図の基本計算法}
+
+\subfile{Voronoi図の逐次添加構成法}
+
+\begin{figure}[b]
+	\centering
+	\begin{minipage}{.4\textwidth}
+		\includegraphics[width = \textwidth]{voronoibefore.jpg}
+		\caption{(a)}
+	\end{minipage}
+	\begin{minipage}{.4\textwidth}
+		\includegraphics[width = \textwidth]{voronoiafter.jpg}
+		\caption{(b)}
+	\end{minipage}
+\caption{母点を添加した時のボロノイ図の更新}
+\end{figure}
+
+\begin{enumerate}[性質4]
+	\item　$母点集合Sに対する閉じたボロノイ図(無限にのびるボロノイ辺を、十分大きな閉曲線につないだもの)をDとする。
+		新しい母点pを添加した時、取り除かれるべきボロノイ点とそのボロノイ辺からなるグラフは、木(サイクルを持たない連結なグラフ)となる。$
+\end{enumerate}
+
+このことは次のように確認できる。
+第一に、このグラフはサイクルを待たない。もしサイクルを持ったとするとこのグラフが取り除かれるときにサイクルで囲まれたボロノイ領域が除かれるから、更新後のボロノイ図においては領域を持たない母点が存在してしまうからである。
+つぎにこのグラフが非連結であるとすると更新後にボロノイ図が二つ以上の連結成分に分かれてしまうからである。\\
+~この性質より更新作業において取り除かれるボロノイ点はボロノイ辺でつながっている。
+従って取り除かれるボロノイ点を一つでも見つけられればそこから芋ずる式に見つけることができる。
+$通常、ボロノイ点からのびる辺は3本でありそのようなボロノイ点がk個集まってできる木から外へのびるボロノイ辺の数はk+2本となるから平均的に定数時間で除くべきボロノイ点の集合を見つけることができる。\\$
+
+\subsection{バッケト法と四分木}
+$では、除くべきボロノイ点の最初はどのようにして見つけたらよいだろうか。
+Dのボロノイ点を端から順に調べるのでは、母点数に比例する時間がかかってしまう。\\
+まず、母点P_{m+1}を添加するときには、V_mのボロノイ領域の中でP_{m+1}を含むものを見つけなければならない。
+なぜなら、P_{m+1}を含む領域ということはその領域をもつ母点がP_{m+1}に最も近いということだからである。
+この母点の探索には既にあるボロノイ図が利用できる。
+なぜなら,任意のひとつの母点をPとした時に、P_{m+1}に最も近い母点の調べるにはPから出発して以下のことを行えばよいからである。$
+\subsubsection*{アルゴリズム(出発点の探索)}
+\begin{enumerate}[(I)]
+\item $ 任意の母点Pに隣接する母点の中でP_{m+1}に最も近い母点Qを見つける。$
+\item $(P_{m+1},P) \leq l(P_{m+1},Q) ならPがP_{m+1}に最も近い母点(出発点)となる。そうでないならQを新しいPとみなして（I）を行う。$
+\end{enumerate}
+
+\subfile{バッケト法と四分木}
+
+\subsubsection*{アルゴリズム(バケット法と四分木を用いた逐次添加構成法)}
+$入力	:n個の母点P_i(i=1,...,n)からなる母点集合S_n\\
+\ \ ~出力:P_i(i=1,...,n)からなるボロノイ図V_n$
+\begin{enumerate}[(I)]
+\item $全ての母点を含む正方形を各辺2^k に分割して4^k 個のバケットを作りそれぞれの母点を格納する。$
+\item $それぞれのバケットに対応するセル (I(r) , J(r) ) を以下の手順で定める。\\
+c := \lfloor 2^k/3 \rfloor ~;~ I(0):=c ~;~ J(0) := c ~;\\
+u := {(-1)}^{k+1} ~;~ m := 1 ~;~ r := 0 ~;~ s := 2c+u ~;
+$
+\begin{lstlisting}[language=C]
+for  t:=1 to k do
+	for p:=1 to m do
+		r:=r+1;
+		I(r):=s-I(r-k);
+		J(r):=J(r-m);
+	m=2m;
+	for p:=1 to m do
+		r:=r+1;
+		I(r):=I(r-m);
+		J(r):=s-J(r-m);
+	m:=2m;
+	u:=-2u;
+	s:=s+u;
+\end{lstlisting}
+\item バケットを番号順に調べて母点が含まれていればそのバケットから根へ向かって辺をたどり、その時に通過する節点に母点番号を格納する。
+\item 根から順に節点を調べて、未添加の母点があればそれを添加する。その際、未添加の節点の親の節点に格納された母点番号を持つ母点から出発点の探索を行い取り除くべきボロノイ図を取り除き新しいボロノイ図を作成する。
+\end{enumerate}
+$
+この方法で、新しく添加された母点に最も近い母点と最も近いボロノイ点にすばやくたどり着くことができ、さらに取り除くべきボロノイ点はそこから連続して見つかり、その数は数個程度であるので一つの母点を添加したときのボロノイ図の更新作業は平均的に O(n) に時間で構成できると期待できる。\\$
+
+\begin{figure}[b]
+	\centering
+	\begin{minipage}{.25\textwidth}
+		\includegraphics[width = \textwidth]{voronoi1.pdf}
+		\caption{計算結果}
+	\end{minipage}
+	\begin{minipage}{.25\textwidth}
+		\includegraphics[width = \textwidth]{voronoi2.pdf}
+		\caption{人工誤差を加えた場合の計算結果}
+	\end{minipage}
+	\caption{ボロノイ図の総優先法の振舞い}
+\end{figure}
+
+\subfile{Voronoi図の位相優先構成法}
+
+\section*{参考文献}
+杉原厚吉(2013) 「計算幾何学」(数理工学ライブラリー) p53-p72,朝倉出版.\\
+\quad 杉原厚吉(2009)「なわばりの数理モデル：ボロノイ図からの数理工学入門」 p26-43,共立出版.\\
+\quad Ohya, T. , Iri, M. and Murota, K.:　Improvements of the Incremental Methodfor the Voronoi Diagram with Comparison of Various Algorithms. Submitted to Journalof the Operations Research Society of Japan\\
+
+\end{document}

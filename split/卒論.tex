@@ -9,10 +9,10 @@
    \thesubsection.\arabic{equation}}
   \@addtoreset{equation}{subsection}
 \makeatother
-\title{$Voronoi$図の性質と構成法}
-\author{学籍番号:061601139\\
+\title{Voronoi図の性質と構成法}
+\author{学籍番号 : 061601139\\
 	氏名 : 中川雅之\\
-	指導教員名:久保仁 准教授\\}
+	指導教員名 : 久保仁 准教授\\}
 \begin{document}
 \maketitle
 \begin{figure}[b]
@@ -119,6 +119,7 @@ for  t:=1 to k do
 $
 この方法で、新しく添加された母点に最も近い母点と最も近いボロノイ点にすばやくたどり着くことができ、さらに取り除くべきボロノイ点はそこから連続して見つかり、その数は数個程度であるので一つの母点を添加したときのボロノイ図の更新作業は平均的に O(n) に時間で構成できると期待できる。\\$
 
+
 \begin{figure}[b]
 	\centering
 	\begin{minipage}{.25\textwidth}
@@ -129,14 +130,18 @@ $
 		\includegraphics[width = \textwidth]{voronoi2.pdf}
 		\caption{人工誤差を加えた場合の計算結果}
 	\end{minipage}
-	\caption{ボロノイ図の総優先法の振舞い}
+	\caption{ボロノイ図の総優先法の振舞い\cite{1}}
 \end{figure}
 
 \subfile{Voronoi図の位相優先構成法}
 
-\section*{参考文献}
-杉原厚吉(2013) 「計算幾何学」(数理工学ライブラリー) p53-p72,朝倉出版.\\
-\quad 杉原厚吉(2009)「なわばりの数理モデル：ボロノイ図からの数理工学入門」 p26-43,共立出版.\\
-\quad Ohya, T. , Iri, M. and Murota, K.:　Improvements of the Incremental Methodfor the Voronoi Diagram with Comparison of Various Algorithms. Submitted to Journalof the Operations Research Society of Japan\\
+\section{まとめ}
+計算幾何学の概念の一つであるボロノイ図の基本的な性質とその構成法を紹介してきた。その中でバケット法と四分木を用いた逐次構成法は平均的に計算量を母点の数nに比例する0(n)程度に改良されており実践的な計算法として期待できる。そしてその計算法が数値誤差が発生しても破綻しないようにする位相優先法を用いたアルゴリズムの開発も行われていると紹介した。このボロノイ図の実践的な応用として避難場所の区分や校区の設定などに利用できると考えられる。
+
+\begin{thebibliography}{99}
+\bibitem{1} 杉原厚吉(2013) 「計算幾何学」(数理工学ライブラリー) p53-p72,朝倉出版.
+\bibitem{2} 杉原厚吉(2009)「なわばりの数理モデル：ボロノイ図からの数理工学入門」 p26-43,共立出版.
+\bibitem{3} Ohya, T. , Iri, M. and Murota, K.:　Improvements of the Incremental Methodfor the Voronoi Diagram with Comparison of Various Algorithms. Submitted to Journalof the Operations Research Society of Japan
+\end{thebibliography}
 
 \end{document}
